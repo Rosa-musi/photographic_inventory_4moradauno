@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { FilesContext } from "../../context/filesContext";
 import ImgUp from "../UploadFiles/ImgUp";
+import {updateDoc, doc} from 'firebase/firestore'
+import {firestore} from '../../Firebase/config'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -44,20 +46,41 @@ function a11yProps(index) {
 export default function RenderArchives() {
    
   const { 
-    infoSeccion, 
-    setInfoSeccion, 
-    infoPropiedad 
+  /*   infoSeccion, 
+    setInfoSeccion,  */
+    infoPropiedad,
+    setInfoPropiedad,
+    propiedadQueSubeFotos,
+    getInfo 
   } = useContext(FilesContext)
 
   const [value, setValue] = React.useState(0);
+  const [infoSeccion, setInfoseccion] = React.useState();
+
 
   const secciones = ["fotos_fachada", "fotos_recamara", "fotos_baño", "fotos_cocina", "fotos_sala", "fotos_otros"]
+
+  
+ 
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-   useEffect(() => {
+  //setear aquí la información para que se renderice lo nuevo
+ useEffect(() => {
+    async function actualizarDatosPropiedad(){
+      const actualizar = await getInfo("contratos", propiedadQueSubeFotos)
+      setInfoPropiedad(actualizar)
+    }
+    actualizarDatosPropiedad()
+  }, []);   
+
+
+
+    useEffect(() => {
+
     let arraysecciones = []
     for (let index = 0; index < secciones.length; index++) {
       const element = secciones[index];
@@ -70,10 +93,41 @@ export default function RenderArchives() {
       })
     }
         
-    setInfoSeccion(arraysecciones) 
-  }, []); 
-     
-  
+    setInfoseccion(arraysecciones) 
+  }, []);  
+
+
+  async function handleAceptar (){
+    const docuRef = doc(firestore, `contratos/${propiedadQueSubeFotos}`)
+    await updateDoc(docuRef, {
+      estatus: "aprobado para firma"
+    })
+  }
+ /*  async function añadirFotosApropiedad(e){
+    e.preventDefault()
+    if(seccion === undefined){
+        alert("elije una sección de la casa") 
+    }
+    const descripcion = e.target.placeComent.value
+    const nuevoArrayPropiedad = 
+        {
+            ...infoPropiedad,
+            [fotosNombre]: {
+                comentarios: descripcion ? descripcion : "",
+                fotos: urlDescarga ? urlDescarga : [],
+                seccion: seccion
+            }
+        }
+    
+  if(seccion === undefined){
+      alert("no hay información para guardar en esta sección")
+  } else {
+      const docuRef = doc(firestore, `contratos/${propiedadQueSubeFotos}`)
+      await updateDoc(docuRef, nuevoArrayPropiedad)
+      e.target.placeComent.value = ""
+  }
+
+} */
  
   return (
     <>
@@ -84,19 +138,19 @@ export default function RenderArchives() {
     </div> 
     <div>
       {
-        infoSeccion.map((element) => {
+        infoSeccion?.map((element) => {
           return( //todas las secciones
             Object.entries(element).map(([key, value]) => {
               const fotos = value.fotos
               return( //values de cada sección
                 <>
-                  <p key={key}>{value.seccion}</p>
-                  <p key={value.seccion}>{value.comentarios}</p>
-                  <div key={element.length} style={{display: "flex", flexWrap: "wrap"}}>
+                  <p key={crypto.randomUUID()}>{value.seccion}</p>
+                  <p key={crypto.randomUUID()}>{value.comentarios}</p>
+                  <div key={crypto.randomUUID()} style={{display: "flex", flexWrap: "wrap"}}>
                   {
                     fotos.map((url, i) => {
                       return(
-                        <img key={i}src={url} alt={`foto`} style={{width: "100px"}} />
+                        <img key={crypto.randomUUID()} src={url} alt={`foto`} style={{width: "100px"}} />
                       )
                     })
                   }
@@ -107,6 +161,10 @@ export default function RenderArchives() {
           )
         })
       }
+    </div>
+    <div>
+      <p>¿Aceptas las fotografias de la propiedad?</p>
+      <button onclick={handleAceptar}>Aceptar</button>
     </div>
     <Box sx={{ width: "100%" }}>
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -125,5 +183,3 @@ export default function RenderArchives() {
     </>
   );
 }
-
-

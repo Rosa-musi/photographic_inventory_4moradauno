@@ -38,6 +38,7 @@ export default function ImgUp () {
       setUrlDescarga(array)
   }
   
+  
    async function añadirFotosApropiedad(e){
       e.preventDefault()
       if(seccion === undefined){
@@ -64,9 +65,7 @@ export default function ImgUp () {
 
   }
 
-  console.log(urlDescarga)
-  console.log(infoPropiedad)
-  console.log(propiedadQueSubeFotos)
+  
 
   return (
     <div id = "div2">

@@ -43,7 +43,7 @@ function Home() {
     console.log(infoUser)
     return (
         <>
-            <h2>Selecciona una propiedad</h2>
+            <h2>Actualiza las fotos de tu propiedad</h2>
         </>
     ) 
 }

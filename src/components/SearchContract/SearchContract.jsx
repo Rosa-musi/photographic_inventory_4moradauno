@@ -20,8 +20,7 @@ export default function SearchContract() {
   const {
     arrayNumerosContratos, 
     setPropiedadQueSubeFotos, 
-    propiedadQueSubeFotos, 
-    infoPropiedad, 
+    propiedadQueSubeFotos,  
     setInfoPropiedad, 
     getInfo
   } = useContext(FilesContext)
@@ -59,7 +58,7 @@ await updateDoc(docuRef, nuevoArrayPropiedad)
     }
     fetchInfoPropiedad()
   
-  }, [getInfo]) 
+  }, [getInfo, setInfoPropiedad]) 
 
 
   

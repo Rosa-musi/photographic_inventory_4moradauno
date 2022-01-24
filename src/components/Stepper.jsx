@@ -54,9 +54,14 @@ const theme = createTheme();
 
 export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const {propiedadQueSubeFotos} = useContext(FilesContext)
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
+    if(propiedadQueSubeFotos === undefined){
+      alert("elije una propiedad válida por favor")
+    }
+    
   };
 
   const handleBack = () => {

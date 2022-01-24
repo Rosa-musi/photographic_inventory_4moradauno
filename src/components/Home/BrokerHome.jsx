@@ -126,7 +126,7 @@ export default function BasicTabs() {
       <TabPanel value={value} index={0}>
         <Home/>
         <button color="primary" className="goToNew"
-                onClick={goToStepper}>Añadir nueva propiedad</button>
+                onClick={goToStepper}>Añadir fotos</button>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Home/>
