@@ -1,7 +1,7 @@
 import React, {useState, createContext, useEffect} from 'react'
 
 import { firestore } from '../Firebase/config'
-import {doc, getDoc} from 'firebase/firestore'
+import {doc, getDoc, onSnapshot } from 'firebase/firestore'
 
 export const FilesContext = createContext();
 
@@ -22,16 +22,22 @@ export const FilesProvider = (props) => {
         const consulta = await getDoc(docuRef)
         const infoDocu = consulta.data();
         return infoDocu
-    }
+    } //onSnapShot
+
 
      useEffect(() => {
         async function fetchCasas(){
-            const casas = await getInfo("array_contratos", "numeros_contrato") 
+            const casas = await getInfo("array_contratos", "numeros_contrato")  
             setArrayNumerosContratos(casas.numeros)
         }
         fetchCasas()
     }, [])
 
+    /* useEffect(() => {
+        onSnapshot(doc(firestore, "contratos", "1"), (doc) => {
+          setEsto(doc.data())
+        })
+    }, []);  */
 
     return(
         <FilesContext.Provider value ={{

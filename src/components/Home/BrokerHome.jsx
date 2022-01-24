@@ -12,6 +12,9 @@ import SearchContract from '../../components/SearchContract/SearchContract';
 import { useNavigate } from "react-router-dom";
 import { FilesContext } from '../../context/filesContext'
 import sinFotoFachada from '../../Assets/no-propertyfound.png'
+import { doc, onSnapshot } from 'firebase/firestore'
+import {firestore} from '../../Firebase/config'
+import { ContentPasteSearchTwoTone } from '@mui/icons-material';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,7 +51,7 @@ function a11yProps(index) {
 
 export default function BasicTabs() {
 
-  const {infoUser, getInfo} = useContext(FilesContext)
+  const {infoUser, getInfo, getInfoSnap} = useContext(FilesContext)
   const [value, setValue] = useState(0);
   const [propiedadesRentadas, setPropiedadesRentadas] = useState([])
   const [propiedadesEnProceso, setPropiedadesEnProceso] = useState([])
@@ -56,6 +59,7 @@ export default function BasicTabs() {
   const [propiedadesEnProcesoInfo, setPropiedadesEnProcesoInfo] = useState([])
   const [propiedadesRentadasRenderizar, setPropiedadesRentadasRenderizar] = useState([])
   const [propiedadesEnProcesoRenderizar, setPropiedadesEnProcesoRenderizar] = useState([])
+  const [esto, setEsto] = useState()
 
 
   const handleChange = (event, newValue) => {
@@ -112,8 +116,14 @@ export default function BasicTabs() {
 
   
 
+/*    useEffect(() => {
+    onSnapshot(doc(firestore, "contratos", "1"), (doc) => {
+      setEsto(doc.data())
+    })
+}, []);  */
+
  
-  
+  console.log(esto)
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

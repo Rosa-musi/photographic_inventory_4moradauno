@@ -48,6 +48,8 @@ export default function RenderArchives() {
   const { 
   /*   infoSeccion, 
     setInfoSeccion,  */
+    infoUser,
+    user,
     infoPropiedad,
     setInfoPropiedad,
     propiedadQueSubeFotos,
@@ -56,6 +58,7 @@ export default function RenderArchives() {
 
   const [value, setValue] = React.useState(0);
   const [infoSeccion, setInfoseccion] = React.useState();
+  const [mensaje, setMensaje] = React.useState()
 
 
   const secciones = ["fotos_fachada", "fotos_recamara", "fotos_baño", "fotos_cocina", "fotos_sala", "fotos_otros"]
@@ -75,7 +78,7 @@ export default function RenderArchives() {
       setInfoPropiedad(actualizar)
     }
     actualizarDatosPropiedad()
-  }, []);   
+  }, [setInfoPropiedad]);   
 
 
 
@@ -96,12 +99,21 @@ export default function RenderArchives() {
     setInfoseccion(arraysecciones) 
   }, []);  
 
+  console.log(user)
+  console.log(infoUser)
+  console.log(infoPropiedad)
+  
 
-  async function handleAceptar (){
+  
+  function handleAceptar (){
+    
     const docuRef = doc(firestore, `contratos/${propiedadQueSubeFotos}`)
-    await updateDoc(docuRef, {
-      estatus: "aprobado para firma"
-    })
+    updateDoc(docuRef, {
+      [infoUser?.rol]: {
+        aprobacion_fotografias: true,
+        usuario: user?.email
+      }
+    }) 
   }
  /*  async function añadirFotosApropiedad(e){
     e.preventDefault()
@@ -128,6 +140,10 @@ export default function RenderArchives() {
   }
 
 } */
+/* useEffect(() => {
+
+  setMensaje()
+}, [input]); */
  
   return (
     <>
@@ -163,10 +179,19 @@ export default function RenderArchives() {
       }
     </div>
     <div>
-      <p>¿Aceptas las fotografias de la propiedad?</p>
-      <button onclick={handleAceptar}>Aceptar</button>
+      {infoPropiedad.inquilino.aprobacion_fotografias === true && infoPropiedad.broker.aprobacion_fotografias === true ? 
+      <p>El contrato está listo para la firma, manda un mensaje al inquilino https://morada-uno.web.app/</p> :
+        <>
+        <p>¿Aceptas las fotografias de la propiedad?</p>
+      <button onClick={handleAceptar}>boton</button>
+        </>
+      
+      
+      }
+
+      
     </div>
-    <Box sx={{ width: "100%" }}>
+ {/*    <Box sx={{ width: "100%" }}>
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
       <Tabs value={value} onChange={handleChange}>
         <Tab label="Asesor@ Inmobiliario" {...a11yProps(0)} />
@@ -179,7 +204,7 @@ export default function RenderArchives() {
     <TabPanel value={value} index={1}>
       <ImgUp />
     </TabPanel>
-  </Box>
+  </Box> */}
     </>
   );
 }
