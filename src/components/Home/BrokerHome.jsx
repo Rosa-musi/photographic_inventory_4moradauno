@@ -51,7 +51,7 @@ function a11yProps(index) {
 
 export default function BasicTabs() {
 
-  const {infoUser, getInfo, getInfoSnap} = useContext(FilesContext)
+  const {infoUser} = useContext(FilesContext)
   const [value, setValue] = useState(0);
   const [propiedadesRentadas, setPropiedadesRentadas] = useState([])
   const [propiedadesEnProceso, setPropiedadesEnProceso] = useState([])
@@ -59,7 +59,6 @@ export default function BasicTabs() {
   const [propiedadesEnProcesoInfo, setPropiedadesEnProcesoInfo] = useState([])
   const [propiedadesRentadasRenderizar, setPropiedadesRentadasRenderizar] = useState([])
   const [propiedadesEnProcesoRenderizar, setPropiedadesEnProcesoRenderizar] = useState([])
-  const [esto, setEsto] = useState()
 
 
   const handleChange = (event, newValue) => {
@@ -81,8 +80,11 @@ export default function BasicTabs() {
       let arrayRentadas = []
       for (let index = 0; index < propiedades?.length; index++) {
         const element = propiedades[index];
-        const propiedadesFetch = await getInfo("contratos", element)
-        arrayRentadas.push(propiedadesFetch)
+        onSnapshot(doc(firestore, "contratos", element), (doc) => {
+          let propiedadesFetch = doc.data()
+          arrayRentadas.push(propiedadesFetch)
+        })
+        
       }
       setPropiedades(arrayRentadas)
 
@@ -90,7 +92,7 @@ export default function BasicTabs() {
     fetchPropiedades(propiedadesRentadas, setPropiedadesRentadasInfo)
     fetchPropiedades(propiedadesEnProceso, setPropiedadesEnProcesoInfo)
 
-  },[getInfo, propiedadesRentadas, propiedadesEnProceso])
+  },[propiedadesRentadas, propiedadesEnProceso])
 
 
   useEffect(() => {
@@ -115,15 +117,6 @@ export default function BasicTabs() {
   }, [propiedadesEnProcesoInfo, propiedadesRentadasInfo]);
 
   
-
-/*    useEffect(() => {
-    onSnapshot(doc(firestore, "contratos", "1"), (doc) => {
-      setEsto(doc.data())
-    })
-}, []);  */
-
- 
-  console.log(esto)
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

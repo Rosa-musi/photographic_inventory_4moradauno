@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { FilesContext } from "../../context/filesContext";
 import ImgUp from "../UploadFiles/ImgUp";
-import {updateDoc, doc} from 'firebase/firestore'
+import {updateDoc, doc, onSnapshot} from 'firebase/firestore'
 import {firestore} from '../../Firebase/config'
 
 function TabPanel(props) {
@@ -45,15 +45,12 @@ function a11yProps(index) {
 
 export default function RenderArchives() {
    
-  const { 
-  /*   infoSeccion, 
-    setInfoSeccion,  */
+  const {
     infoUser,
     user,
     infoPropiedad,
     setInfoPropiedad,
     propiedadQueSubeFotos,
-    getInfo 
   } = useContext(FilesContext)
 
   const [value, setValue] = React.useState(0);
@@ -74,7 +71,11 @@ export default function RenderArchives() {
   //setear aquí la información para que se renderice lo nuevo
  useEffect(() => {
     async function actualizarDatosPropiedad(){
-      const actualizar = await getInfo("contratos", propiedadQueSubeFotos)
+      let actualizar
+      onSnapshot(doc(firestore, "contratos", propiedadQueSubeFotos), (doc) => {
+        actualizar = doc.data()
+      })
+    
       setInfoPropiedad(actualizar)
     }
     actualizarDatosPropiedad()

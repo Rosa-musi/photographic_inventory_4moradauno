@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useContext, useEffect, useState} from 'react'
 import {FilesContext} from '../../context/filesContext'
-import {doc, updateDoc} from 'firebase/firestore'
+import {doc, onSnapshot} from 'firebase/firestore'
 import {firestore} from '../../Firebase/config'
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -21,8 +21,7 @@ export default function SearchContract() {
     arrayNumerosContratos, 
     setPropiedadQueSubeFotos, 
     propiedadQueSubeFotos,  
-    setInfoPropiedad, 
-    getInfo
+    setInfoPropiedad
   } = useContext(FilesContext)
 
   const [casa, setCasa] = useState()
@@ -50,15 +49,17 @@ await updateDoc(docuRef, nuevoArrayPropiedad)
 
   useEffect(() => {
     async function fetchInfoPropiedad() {
-        const setearPropiedadInfo = await getInfo("contratos", propiedadQueSubeFotos)
-       
+        let setearPropiedadInfo
+        onSnapshot(doc(firestore, "contratos", propiedadQueSubeFotos), (doc) => {
+          setearPropiedadInfo = doc.data()
+        })
         setInfoPropiedad(setearPropiedadInfo)
         setCasa(setearPropiedadInfo?.alias_casa)
         setContrato(setearPropiedadInfo?.numero_contrato)
     }
     fetchInfoPropiedad()
   
-  }, [getInfo, setInfoPropiedad]) 
+  }, [setInfoPropiedad]) 
 
 
   

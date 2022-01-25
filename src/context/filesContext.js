@@ -33,6 +33,7 @@ export const FilesProvider = (props) => {
         fetchCasas()
     }, [])
 
+   
     /* useEffect(() => {
         onSnapshot(doc(firestore, "contratos", "1"), (doc) => {
           setEsto(doc.data())
